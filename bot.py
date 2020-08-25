@@ -8,7 +8,7 @@ from variables import *
 print('---- bot started ----')
 header ={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
 videos = []
-
+title = []
 tribal_article = []
 tribal_img = []
 url ='https://www.tribalfootball.com/transfers?page=1'
@@ -18,6 +18,8 @@ find_container = soup.find('div',class_='switcher js-anchor list')
 find_grid = find_container.find('div',class_='grid grid--narrow')
 for news in find_grid.findAll('div',class_='grid__item palm-one-half desk-wide-one-third'):
     find_a = news.find('a',href=True)
+    find_h3 = news.find('h3',class_='card__title')
+    title.append(find_h3.text)
     _url = 'https://www.tribalfootball.com'+find_a['href']
     _source = requests.get(_url ,headers=header).text
     _soup = BeautifulSoup(_source,'lxml')
@@ -68,4 +70,11 @@ final_video = mpe.concatenate_videoclips(videos)
 print('+ VIDEO CONCATENATED') 
 
 final_video.write_videofile('result/final.mp4',fps=25)
-print('+ FINISHED')
+print('+ VIDEO CREATED')
+print('--------------------------------------------------------')
+
+print('LATEST TRANSFER NEWS AND GOSSIPS AROUND THE WORLD | BOT FOOTBALL')
+print('')
+newstitle = '\n'.join(title[:10])
+desc = 'latest football transfer news and gossips around the world\n{}\n#football #transfer'.format(newstitle)
+print(desc)
